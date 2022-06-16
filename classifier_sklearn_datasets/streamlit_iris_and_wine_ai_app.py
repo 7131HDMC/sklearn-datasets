@@ -114,3 +114,8 @@ plt.xlabel("Principal Component 2")
 plt.colorbar()
 
 st.pyplot(fig)
+
+# TODO
+# - add more params ()sklearn
+# add other classifier
+# add feature scaling
