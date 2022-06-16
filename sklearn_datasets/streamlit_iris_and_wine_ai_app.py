@@ -4,13 +4,19 @@ import streamlit as st
 from sklearn import datasets
 
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
 from sklearn.svm import SVC
 
-st.title("Streamlit example")
+st.title("""
+# Streamlit example
+""")
 
 st.write("""
-# Explore different classifier
+### Explore different classifier
 """)
 
 dataset_name = st.sidebar.selectbox(
@@ -79,3 +85,32 @@ def get_classifier(cif_name, params):
 
 
 cif = get_classifier(classifier_name, params)
+
+# Classification
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=1234)
+
+cif.fit(X_train, y_train)
+
+y_pred = cif.predict(X_test)
+
+acc = accuracy_score(y_test, y_pred)
+
+st.write(f"Classifier = {classifier_name}")
+st.write(f"Accuracy = {acc}")
+
+# Plot
+pca = PCA(2)
+X_projected = pca.fit_transform(X)
+
+x1 = X_projected[:, 0]
+x2 = X_projected[:, 1]
+
+fig = plt.figure()
+
+plt.scatter(x1, x2, c=y, alpha=0.8, cmap="viridis")
+plt.xlabel("Principal Component 1")
+plt.xlabel("Principal Component 2")
+plt.colorbar()
+
+st.pyplot(fig)
